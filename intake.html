@@ -184,6 +184,26 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
 .sent p{margin:0;color:var(--paper-muted);max-width:40ch}
 @media (max-width:900px){.intake{grid-template-columns:1fr}.intake-copy{position:static}}
 @media (max-width:560px){.row2{grid-template-columns:1fr;gap:0}}
+
+.slip{list-style:none;margin:36px 0 0;padding:0;max-width:30ch}
+.slip li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);color:var(--muted);
+         transition:color .3s}
+.slip li:last-child{border-bottom:1px solid var(--line)}
+.slip li.done{color:var(--text)}
+.slip svg{flex:none;width:18px;height:18px}
+.slip circle{fill:none;stroke:var(--line-2);stroke-width:1.5;transition:stroke .3s}
+.slip path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+           stroke-dasharray:14;stroke-dashoffset:14;transition:stroke-dashoffset .5s var(--ease)}
+.slip li.done circle{stroke:var(--accent)}
+.slip li.done path{stroke-dashoffset:0}
+.slip-count{margin:14px 0 0;font-size:14px;color:var(--muted)}
+.intake-copy .back{margin-top:24px}
+.field{position:relative}
+.field::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:var(--accent-line);
+              transform:scaleX(0);transform-origin:0 50%;transition:transform .5s var(--ease)}
+.field:focus-within::after{transform:scaleX(1)}
+@media (prefers-reduced-motion:reduce){.slip path,.field::after{transition:none}}
+@media (max-width:900px){.slip{max-width:none}}
 </style>
 </head>
 <body>
@@ -199,6 +219,8 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
   <div class="intake-copy">
     <h1>Expedite your analysis</h1>
     <p>Send a name and what you have so far. A person reads every request and replies at the email you give.</p>
+    <ul class="slip" id="slip" aria-hidden="true"><li data-need="name"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/><path d="M5 9.4l2.6 2.6L13 6.6"/></svg><span>Your name</span></li><li data-need="email"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/><path d="M5 9.4l2.6 2.6L13 6.6"/></svg><span>Your email</span></li><li data-need="firm"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/><path d="M5 9.4l2.6 2.6L13 6.6"/></svg><span>Your firm</span></li><li data-need="list"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8"/><path d="M5 9.4l2.6 2.6L13 6.6"/></svg><span>A name or ticker</span></li></ul>
+    <p class="slip-count" id="slip-count" role="status">Four things and it's on its way.</p>
     <a class="back" href="pitch.html">How it works</a>
   </div>
   <div class="form-sheet">
@@ -308,6 +330,35 @@ document.getElementById('intake-form').addEventListener('submit', function(e){
       btn.textContent = 'Send this request';
     });
 });
+</script>
+
+<script>
+(function(){
+  var form=document.getElementById('intake-form'), slip=document.getElementById('slip'), count=document.getElementById('slip-count');
+  if(!form||!slip)return;
+  var list=form.querySelector('textarea[required]');
+  function val(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  var checks={
+    name:function(){return !!(val('first-name')&&val('last-name'));},
+    email:function(){var el=document.getElementById('email');return !!(el.value.trim()&&el.checkValidity());},
+    firm:function(){return !!val('firm');},
+    list:function(){return !!(list&&list.value.trim());}
+  };
+  function update(){
+    var done=0, items=slip.querySelectorAll('li');
+    items.forEach(function(li){var ok=checks[li.getAttribute('data-need')]();li.classList.toggle('done',ok);if(ok)done++;});
+    count.textContent=done===items.length?'Ready to send.':done===0?"Four things and it's on its way.":done+' of '+items.length+' filled in.';
+  }
+  form.addEventListener('input',update); update();
+
+  if(document.documentElement.classList.contains('js-motion')&&window.gsap){
+    var h=document.querySelector('.intake h1');
+    h.innerHTML=h.textContent.trim().split(/\s+/).map(function(w){return '<span class="w"><span>'+w+'</span></span>';}).join(' ');
+    gsap.from(h.querySelectorAll('.w>span'),{yPercent:115,duration:1.1,ease:'expo.out',stagger:.05});
+    gsap.from('#slip li',{opacity:0,x:-14,duration:.8,ease:'expo.out',stagger:.07,delay:.45});
+    gsap.from('.form-sheet .field,.form-sheet .btn',{opacity:0,y:14,duration:.8,ease:'expo.out',stagger:.06,delay:.55,clearProps:'transform'});
+  }
+})();
 </script>
 </body>
 </html>

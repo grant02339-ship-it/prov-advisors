@@ -208,6 +208,23 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
 
 @media (max-width:560px){.flow{grid-template-columns:1fr}}
 
+/* why not just ask an AI tool: two columns, theirs quiet, ours plain */
+.vs{margin-top:56px}
+.vs-head,.vs-row{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:clamp(24px,5vw,80px)}
+.vs-head{padding-bottom:16px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+.vs-head span:first-child{color:var(--muted)}
+.vs-row{padding:22px 0;border-top:1px solid var(--line);align-items:baseline}
+.vs-row p{margin:0}
+.vs-them{color:var(--muted)}
+.vs-them span{background:linear-gradient(var(--muted),var(--muted)) no-repeat 0 56%/0% 1px;
+              -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.vs-us{font-size:clamp(18px,1.5vw,21px);line-height:1.45;max-width:46ch}
+@media (max-width:760px){
+  .vs-head{display:none}
+  .vs-row{grid-template-columns:1fr;row-gap:8px;padding:20px 0}
+  .vs-them{font-size:15px}
+}
+
 /* boundaries */
 .bounds{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);margin-top:56px}
 .bounds h3{margin:0 0 20px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
@@ -264,6 +281,65 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
   .stamp span{display:none}
   .example-note{display:none}
 }
+
+.scroll-line{position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--accent);
+             transform:scaleX(0);transform-origin:0 50%;pointer-events:none}
+.typed{display:flex;align-items:center;gap:12px;margin:28px 0 0;font-size:15px;color:var(--muted)}
+.typed b{display:inline-flex;align-items:center;min-width:6ch;height:36px;padding:0 12px;border:1px solid var(--line-2);
+         border-radius:var(--r);color:var(--text);font:500 14px/1 var(--mono);letter-spacing:.06em}
+.typed b::after{content:"";width:1px;height:16px;margin-left:3px;background:var(--accent);animation:caret 1s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.typed b::after{animation:none}}
+.js-motion .sheet-stick{perspective:1600px}
+
+/* the ribbon of sources: runs on its own, and scrolling speeds it up or turns it around */
+.marquee{border-top:1px solid var(--line);padding:clamp(22px,3vw,36px) 0;overflow:hidden}
+.marquee-track{display:flex;align-items:center;gap:clamp(28px,4vw,56px);width:max-content;will-change:transform}
+.marquee-track span{font:300 clamp(26px,3.4vw,52px)/1 var(--sans);letter-spacing:-.015em;text-transform:uppercase;
+                    white-space:nowrap;color:transparent;-webkit-text-stroke:1px var(--line-2)}
+.marquee-track span:nth-of-type(3n+1){color:var(--text);-webkit-text-stroke:0}
+.marquee-track i{flex:none;width:9px;height:9px;background:var(--accent);transform:rotate(45deg)}
+
+/* trace any line: sentences on paper, threads out to the source each one rests on */
+.trace{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.86fr);
+       column-gap:clamp(72px,11vw,176px);align-items:center;margin-top:56px}
+.trace-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+.trace-svg path{fill:none;stroke:var(--accent-line);stroke-width:1.5}
+.trace-svg circle{fill:var(--accent-line)}
+.trace-read{margin:0;background:var(--paper);color:var(--paper-text);border-radius:var(--r-paper);transform:rotate(-.5deg);
+            box-shadow:0 0 0 1px rgba(var(--shadow),.06),0 40px 90px -40px rgba(var(--shadow),.45),0 10px 24px -14px rgba(var(--shadow),.25)}
+.trace-doc{padding:24px 26px 28px}
+.trace-doc p{font:400 clamp(16px,1.35vw,19px)/1.55 var(--serif);margin:0 0 16px}
+.trace-doc p:last-child{margin:0}
+.t{padding:0 1px;border-radius:2px;background:linear-gradient(var(--hl),var(--hl)) no-repeat 0 88%/100% 78%;
+   -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.trace-src{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.trace-src li{display:grid;gap:4px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r)}
+.trace-src b{font-weight:500;font-size:16px;letter-spacing:-.005em}
+.trace-src span{color:var(--muted);font-size:14.5px}
+.trace-src em{font-style:normal;font-weight:500;font-size:14px;color:#7CC6A2}
+:root[data-theme="light"] .trace-src em{color:var(--ok)}
+.trace-src em.un,:root[data-theme="light"] .trace-src em.un{color:var(--accent)}
+.trace-src small{color:var(--muted);font-size:13px}
+@media (max-width:900px){
+  .trace{grid-template-columns:1fr;row-gap:20px}
+  .trace-svg{display:none}
+}
+
+/* working together: on a wide screen with motion on, the five steps travel sideways while the section holds */
+.flow-bar{display:none}
+@media (min-width:901px){
+  .js-motion .flow-rich .flow-bar{display:block;height:1px;margin-top:56px;background:var(--line)}
+  .js-motion .flow-rich .flow-bar i{display:block;height:100%;background:var(--accent-line);transform:scaleX(0);transform-origin:0 50%}
+  .js-motion .flow-rich .flow{display:flex;gap:0;margin:0;width:max-content;counter-reset:step}
+  .js-motion .flow-rich .flow li{width:min(40vw,560px);padding:32px 72px 8px 0;border-top:0;counter-increment:step}
+  .js-motion .flow-rich .flow li::before{content:counter(step);display:block;margin-bottom:28px;
+       font:300 clamp(72px,8vw,128px)/.9 var(--sans);letter-spacing:-.04em;color:transparent;
+       -webkit-text-stroke:1px var(--line-2);transition:color .5s var(--ease),-webkit-text-stroke-color .5s var(--ease)}
+  .js-motion .flow-rich .flow li.on::before{color:var(--accent);-webkit-text-stroke-color:var(--accent)}
+  .js-motion .flow-rich .flow h3{font-size:24px;margin-bottom:12px}
+  .js-motion .flow-rich .flow p{font-size:17px;max-width:34ch}
+}
 </style>
 </head>
 <body>
@@ -281,6 +357,7 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
     <div class="hero">
       <h1>Give your analysts back their time</h1>
       <p class="lede">It reads the news and filings on names you're already reviewing and writes a sourced research read. No buy or sell calls.</p>
+      <p class="typed" aria-hidden="true">A name comes in <b id="typed">COST</b></p>
       <div class="hero-ctas">
         <a class="btn btn-primary" href="intake.html">Expedite your analysis</a>
         <a class="btn btn-quiet" href="#how">See how it works</a>
@@ -336,20 +413,64 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
 <article class="step">
   <p class="verb">Log</p>
   <h2>Every source is recorded</h2>
-  <p>The read and each source behind it, dated and labeled, so you can trace any line back to where it came from.</p>
+  <p>The read and each source behind it, dated, labeled and linked to its page, so you can trace any line back to where it came from.</p>
 </article>
 <article class="step">
   <p class="verb">Check facts</p>
   <h2>Then every fact is checked</h2>
-  <p>Every number, date and quote is checked against its original source, and anything a source contradicts is fixed. Then a person reviews the read before it's sent.</p><p>Its sources are graded too, and repeated misses become lessons for the next read, in a record you can audit yourself.</p>
+  <p>Every number, date and quote is checked against its original source, and anything a source contradicts is fixed. Anything that can't be confirmed is labeled unconfirmed, never left looking settled. Then a person reviews the read before it's sent.</p><p>Its sources are graded too, and repeated misses become lessons for the next read, in a record you can audit yourself. Each confirmed fact carries a date to check it again by.</p>
 </article>
     </div>
   </div>
 </section>
-
-<section class="section" aria-labelledby="work-h">
+<div class="marquee" role="img" aria-label="Sources it reads: Form 10-K, Form 10-Q, Form 8-K, Proxy statement, Earnings call, Company release, Analyst note, Court filing, Regulator notice, Trade press">
+  <div class="marquee-track" aria-hidden="true"><span>Form 10-K</span><i></i><span>Form 10-Q</span><i></i><span>Form 8-K</span><i></i><span>Proxy statement</span><i></i><span>Earnings call</span><i></i><span>Company release</span><i></i><span>Analyst note</span><i></i><span>Court filing</span><i></i><span>Regulator notice</span><i></i><span>Trade press</span><i></i></div>
+</div>
+<section class="section trace-sec" aria-labelledby="trace-h">
+  <div class="wrap trace-pin">
+    <h2 id="trace-h">Trace any line to its source</h2>
+    <p class="sub">Every sentence in a read ends in a source you can open. What couldn't be confirmed says so.</p>
+    <div class="trace" id="trace">
+      <svg class="trace-svg" aria-hidden="true"></svg>
+      <figure class="trace-read" aria-label="Example of a research read">
+        <div class="sheet-head"><span><b>Research read</b>, excerpt</span><span>Example</span></div>
+        <div class="trace-doc">
+<p><span class="t">The company lowered its full-year revenue outlook in the fourth quarter.</span></p>
+<p><span class="t">On August 14 it took on a new $180 million senior secured term loan.</span></p>
+<p><span class="t">Three analysts cut their price targets this month, and one raised.</span></p>
+<p><span class="t">A supplier dispute may delay the spring product line.</span></p>
+        </div>
+      </figure>
+      <ol class="trace-src" aria-label="The source behind each sentence, in order">
+<li><b>Form 10-K, page 58</b><span>Filed 14 Aug 2026, sec.gov</span><em>Confirmed against the filing</em><small>Check again by 21 Jan 2027</small></li>
+<li><b>Form 8-K, Exhibit 10.1</b><span>Filed 15 Aug 2026, sec.gov</span><em>Confirmed against the filing</em><small>Check again by 21 Jan 2027</small></li>
+<li><b>Analyst notes</b><span>6 to 10 Oct 2026, four firms</span><em>Confirmed in two outlets</em><small>Check again by 12 Nov 2026</small></li>
+<li><b>Trade press</b><span>9 Oct 2026, one outlet</span><em class="un">Unconfirmed: no filing or second source</em><small>Flagged for your review</small></li>
+      </ol>
+    </div>
+  </div>
+</section>
+<section class="section versus" aria-labelledby="vs-h">
   <div class="wrap">
+    <h2 id="vs-h">Why not just ask an AI tool</h2>
+    <p class="sub">You could. This is the work it would still leave with you.</p>
+    <div class="vs" role="table" aria-label="A general AI tool compared with PROV">
+      <div class="vs-head" role="row"><span role="columnheader">A general AI tool</span><span role="columnheader">PROV</span></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Writes an answer and stops.</span></p><p class="vs-us" role="cell">Checks every number, date and quote against its source after writing, and fixes what a source contradicts.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>States everything with the same confidence.</span></p><p class="vs-us" role="cell">Labels what it couldn't confirm as unconfirmed, so nothing unsettled reads as settled.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Can give no source, or cite a page it never opened.</span></p><p class="vs-us" role="cell">Links each fact to the page it came from. A link is kept only if that page was opened during the research.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Tends to lean the way the question leans.</span></p><p class="vs-us" role="cell">Makes no buy or sell call, and has to list the sources that cut against its own main finding.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Starts from zero every time.</span></p><p class="vs-us" role="cell">Grades its own sources on every read. Repeated misses become rules the next read follows.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Goes out of date without telling you.</span></p><p class="vs-us" role="cell">Gives each confirmed fact a date to check it again by.</p></div>
+<div class="vs-row" role="row"><p class="vs-them" role="cell"><span>Leaves the checking to you.</span></p><p class="vs-us" role="cell">Is reviewed by a person before anything is sent.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section flow-rich" aria-labelledby="work-h">
+  <div class="wrap flow-pin">
     <h2 id="work-h">How working together goes</h2>
+    <div class="flow-bar" aria-hidden="true"><i></i></div>
     <ol class="flow">
 <li><h3>We scope it</h3><p>A short call sets exactly what gets covered: a watchlist, a set of filings, one real question. Agreed before anything starts.</p></li>
 <li><h3>Done for you, from public sources</h3><p>We run the research on public information: filings, company releases, news and trade press. You get the finished report, with nothing to install or learn.</p></li>
@@ -364,7 +485,7 @@ mark.hl{color:inherit;padding:0 1px;border-radius:2px;
     <h2 id="bounds-h">What this is, and what it isn't</h2>
     <div class="bounds">
       <div class="is"><h3>This is</h3><ul><li>Faster research, plus the checks that keep it honest</li><li>A way to go deeper on every name, in less time, with the team you already have</li><li>Every fact tied to the line it came from</li><li>A method tested on our own work, mistakes included</li><li>An early partnership. The first clients help shape what this becomes, with direct access to the person building it</li></ul></div>
-      <div class="isnt"><h3>This isn't</h3><ul><li>Investment advice, a recommendation, or a sub-advisory arrangement of any kind. Your fiduciary judgment stays yours, on every name</li><li>Asset management. Your clients' money and your trades stay entirely yours to decide</li><li>A pitch to cut your team. It's a pitch to get more out of it</li><li>A one-time pass. Every read's sources are logged and checked, so it keeps getting better at where it looks</li></ul></div>
+      <div class="isnt"><h3>This isn't</h3><ul><li>Investment advice, a recommendation, or a sub-advisory arrangement of any kind. Your fiduciary judgment stays yours, on every name</li><li>Asset management. Your clients' money and your trades stay entirely yours to decide</li><li>A pitch to cut your team. It's a pitch to get more out of it</li><li>A one-time pass. Every read's sources are graded, and repeated misses become rules the next read follows</li></ul></div>
     </div>
   </div>
 </section>
@@ -504,6 +625,183 @@ function copyEmail(){
   var eng=document.querySelector('.engage h2');
   if(eng){gsap.from(splitWords(eng),{yPercent:115,duration:1.1,ease:'expo.out',stagger:.05,
     scrollTrigger:{trigger:eng,start:'top 82%',once:true}});}
+
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){ScrollTrigger.refresh();});}
+})();
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  if(!root.classList.contains('js-motion')||!window.gsap||!window.ScrollTrigger)return;
+  gsap.registerPlugin(ScrollTrigger);
+  var fine=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  var mm=gsap.matchMedia();
+  function splitWords(el){
+    el.innerHTML=el.textContent.trim().split(/\s+/).map(function(w){return '<span class="w"><span>'+w+'</span></span>';}).join(' ');
+    return el.querySelectorAll('.w>span');
+  }
+
+  // A hairline under the nav that fills as the page is read.
+  var nav=document.querySelector('.nav');
+  if(nav){
+    var line=document.createElement('i'); line.className='scroll-line'; nav.appendChild(line);
+    gsap.to(line,{scaleX:1,ease:'none',scrollTrigger:{start:0,end:'max',scrub:.3}});
+  }
+
+  // A name comes in: example names type themselves into the field.
+  var typed=document.getElementById('typed');
+  if(typed){
+    var names=['COST','HD','UNH','V','PG','CAT'], n=0;
+    var type=function(word,i){
+      typed.textContent=word.slice(0,i);
+      if(i<word.length){gsap.delayedCall(.11,type,[word,i+1]);}else{gsap.delayedCall(1.7,erase,[word,word.length]);}
+    };
+    var erase=function(word,i){
+      typed.textContent=word.slice(0,i);
+      if(i>0){gsap.delayedCall(.05,erase,[word,i-1]);}else{n=(n+1)%names.length;gsap.delayedCall(.35,type,[names[n],1]);}
+    };
+    typed.textContent=''; gsap.delayedCall(1.5,type,[names[0],1]);
+  }
+
+  // The sheet leans a little toward the pointer, like paper picked up by one corner.
+  if(fine){
+    var stack=document.querySelector('.sheet-stack'), story=document.querySelector('.story');
+    if(stack&&story){
+      var rx=gsap.quickTo(stack,'rotationX',{duration:.9,ease:'power3'}), ry=gsap.quickTo(stack,'rotationY',{duration:.9,ease:'power3'});
+      story.addEventListener('pointermove',function(e){
+        var r=stack.getBoundingClientRect();
+        ry((e.clientX-(r.left+r.width/2))/window.innerWidth*9);
+        rx(-(e.clientY-(r.top+r.height/2))/window.innerHeight*7);
+      });
+      story.addEventListener('pointerleave',function(){rx(0);ry(0);});
+    }
+    // Primary buttons pull slightly toward the pointer.
+    gsap.utils.toArray('.btn-primary').forEach(function(b){
+      var bx=gsap.quickTo(b,'x',{duration:.5,ease:'power3'}), by=gsap.quickTo(b,'y',{duration:.5,ease:'power3'});
+      b.addEventListener('pointermove',function(e){
+        var r=b.getBoundingClientRect();
+        bx((e.clientX-(r.left+r.width/2))*.22); by((e.clientY-(r.top+r.height/2))*.3);
+      });
+      b.addEventListener('pointerleave',function(){bx(0);by(0);});
+    });
+  }
+
+  // The ribbon of sources: scrolling speeds it up, scrolling back turns it around.
+  var track=document.querySelector('.marquee-track');
+  if(track){
+    track.innerHTML+=track.innerHTML;
+    var loop=gsap.to(track,{xPercent:-50,ease:'none',duration:40,repeat:-1});
+    loop.totalTime(loop.duration()*200);   // room to run backwards
+    var settle;
+    ScrollTrigger.create({start:0,end:'max',onUpdate:function(self){
+      var v=self.getVelocity(), dir=v<0?-1:1, boost=gsap.utils.clamp(1,7,1+Math.abs(v)/260);
+      gsap.to(loop,{timeScale:dir*boost,duration:.25,overwrite:true});
+      if(settle)settle.kill();
+      settle=gsap.delayedCall(.3,function(){gsap.to(loop,{timeScale:dir,duration:1.4,overwrite:true});});
+    }});
+  }
+
+  // Section headlines rise word by word the first time they come into view.
+  gsap.utils.toArray('.section:not(.engage) h2').forEach(function(h){
+    gsap.from(splitWords(h),{yPercent:115,duration:1,ease:'expo.out',stagger:.04,
+      scrollTrigger:{trigger:h,start:'top 86%',once:true}});
+  });
+
+  // What this is, and isn't: each line is wiped in from the left.
+  gsap.utils.toArray('.bounds ul').forEach(function(ul){
+    gsap.fromTo(ul.children,{clipPath:'inset(0 100% 0 0)',opacity:0},
+      {clipPath:'inset(0 0% 0 0)',opacity:1,duration:.9,ease:'expo.out',stagger:.09,clearProps:'clipPath',
+       scrollTrigger:{trigger:ul,start:'top 82%',once:true}});
+  });
+
+  // Why not just ask an AI tool: each general-tool line is crossed through as PROV's answer is wiped in.
+  gsap.utils.toArray('.vs-row').forEach(function(row){
+    var them=row.querySelector('.vs-them span'), us=row.querySelector('.vs-us');
+    gsap.timeline({scrollTrigger:{trigger:row,start:'top 80%',once:true}})
+      .fromTo(us,{clipPath:'inset(0 100% 0 0)',opacity:0},{clipPath:'inset(0 0% 0 0)',opacity:1,duration:1,ease:'expo.out',clearProps:'clipPath'})
+      .to(them,{backgroundSize:'100% 1px',duration:.7,ease:'power2.inOut'},.15)
+      .to(row.querySelector('.vs-them'),{opacity:.82,duration:.7},.15);   // still easy to read once crossed through
+  });
+
+  // Trace any line: a thread is drawn from each sentence to the source it rests on.
+  var trace=document.getElementById('trace');
+  if(trace){
+    var lines=gsap.utils.toArray('.trace-doc .t'), cards=gsap.utils.toArray('.trace-src li');
+    mm.add({wide:'(min-width:901px)',tall:'(min-height:780px)'},function(ctx){
+      var wide=ctx.conditions.wide, tall=ctx.conditions.tall;
+      gsap.set(lines,{backgroundSize:'0% 78%'});
+      gsap.set(cards,{opacity:.28});
+      cards.forEach(function(c){gsap.set(c.querySelectorAll('em,small'),{autoAlpha:0,y:6});});
+      if(!wide){
+        // phones: no threads; each sentence is underlined and its source lights up as it arrives
+        lines.forEach(function(el,i){
+          gsap.timeline({scrollTrigger:{trigger:cards[i],start:'top 86%',once:true}})
+            .to(el,{backgroundSize:'100% 78%',duration:.6,ease:'power2.out'})
+            .to(cards[i],{opacity:1,duration:.4},'<.1')
+            .to(cards[i].querySelectorAll('em,small'),{autoAlpha:1,y:0,duration:.4,stagger:.08},'<.1');
+        });
+        return;
+      }
+      var svg=trace.querySelector('svg'), NS='http://www.w3.org/2000/svg', paths=[], dots=[];
+      lines.forEach(function(){
+        var p=document.createElementNS(NS,'path'), c=document.createElementNS(NS,'circle');
+        c.setAttribute('r',3.5); svg.appendChild(p); svg.appendChild(c); paths.push(p); dots.push(c);
+      });
+      function layout(){
+        var b=trace.getBoundingClientRect(), paper=trace.querySelector('.trace-read').getBoundingClientRect();
+        svg.setAttribute('viewBox','0 0 '+b.width+' '+b.height);
+        lines.forEach(function(el,i){
+          // out along the sentence's own last line to the edge of the paper, then across to its source
+          var rs=el.getClientRects(), r=rs[rs.length-1], c=cards[i].getBoundingClientRect();
+          var sx=r.right-b.left+8, sy=r.top-b.top+r.height/2, px=paper.right-b.left+2;
+          var ex=c.left-b.left, ey=c.top-b.top+Math.min(30,c.height/2), k=(ex-px)*.55;
+          paths[i].setAttribute('d','M'+sx+' '+sy+' L'+px+' '+sy+' C'+(px+k)+' '+sy+' '+(ex-k)+' '+ey+' '+ex+' '+ey);
+          var len=paths[i].getTotalLength();
+          paths[i].style.strokeDasharray=len; paths[i].setAttribute('data-len',len);
+          dots[i].setAttribute('cx',ex); dots[i].setAttribute('cy',ey);
+        });
+      }
+      layout();
+      ScrollTrigger.addEventListener('refreshInit',layout);
+      gsap.set(dots,{scale:0,transformOrigin:'50% 50%'});
+      var tl=gsap.timeline({defaults:{ease:'none'},scrollTrigger:tall
+        ?{trigger:'.trace-pin',start:'top top+=96',end:'+=150%',pin:true,scrub:.5,invalidateOnRefresh:true,anticipatePin:1}
+        :{trigger:trace,start:'top 72%',end:'bottom 78%',scrub:.5,invalidateOnRefresh:true}});
+      lines.forEach(function(el,i){
+        tl.to(el,{backgroundSize:'100% 78%',duration:.5})
+          .fromTo(paths[i],{strokeDashoffset:function(){return paths[i].getAttribute('data-len');}},{strokeDashoffset:0,duration:.7})
+          .to(dots[i],{scale:1,duration:.15})
+          .to(cards[i],{opacity:1,duration:.3},'<')
+          .to(cards[i].querySelectorAll('em,small'),{autoAlpha:1,y:0,duration:.25,stagger:.1},'<.1');
+      });
+      return function(){
+        ScrollTrigger.removeEventListener('refreshInit',layout);
+        while(svg.firstChild)svg.removeChild(svg.firstChild);
+      };
+    });
+  }
+
+  // Working together: the section holds while the five steps travel sideways.
+  mm.add('(min-width:901px)',function(){
+    var sec=document.querySelector('.flow-rich'); if(!sec)return;
+    var pin=sec.querySelector('.flow-pin'), track=sec.querySelector('.flow'), bar=sec.querySelector('.flow-bar i');
+    var items=gsap.utils.toArray(track.children);
+    function dist(){
+      var left=track.parentElement.getBoundingClientRect().left;
+      return Math.max(0,track.scrollWidth-(window.innerWidth-left)+left);
+    }
+    function light(p){
+      var idx=Math.round(p*(items.length-1));
+      items.forEach(function(li,i){li.classList.toggle('on',i<=idx);});
+    }
+    light(0);
+    gsap.timeline({defaults:{ease:'none'},scrollTrigger:{trigger:pin,start:'top top+=96',end:function(){return '+='+(dist()+200);},
+        pin:true,scrub:.6,invalidateOnRefresh:true,anticipatePin:1,onUpdate:function(self){light(self.progress);}}})
+      .to(track,{x:function(){return -dist();},duration:1},0)
+      .fromTo(bar,{scaleX:0},{scaleX:1,duration:1},0);
+    return function(){items.forEach(function(li){li.classList.remove('on');});};
+  });
 
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){ScrollTrigger.refresh();});}
 })();
